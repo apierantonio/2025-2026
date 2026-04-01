@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <style>
+            input:invalid {
+                border-color: #f87171;
+                background-color: #fff1f1;
+            }
+
+            input:valid {
+                border-color: #34d399;
+                background-color: #ecfdf5;
+            }
+        </style>
+
+    </head>
+    <body>
+        <form>
+            <input type="text" required pattern="pippo|pluto"><br>
+            <input
+      type="text"
+      id="t1"
+      name="fruit"
+      list="l1"
+      required
+      pattern="[Bb]anana|[Cc]herry|[Aa]pple|[Ss]trawberry|[Ll]emon|[Oo]range" />
+    <datalist id="l1">
+      <option>Banana</option>
+      <option>Cherry</option>
+      <option>Apple</option>
+      <option>Strawberry</option>
+      <option>Lemon</option>
+      <option>Orange</option>
+    </datalist>
+            <input type="submit">
+        </form>
+    </body>
+</html>

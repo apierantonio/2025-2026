@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="color-scheme" content="dark">
+  <title>Calcolatrice</title>
+  <style>
+    /* ===== RESET E BASE ===== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      background: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ===== CONTENITORE PRINCIPALE ===== */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .calculator {
+      width: 100%;
+      max-width: 360px;
+      height: 100%;
+      max-height: 640px;
+      display: flex;
+      flex-direction: column;
+      padding: 0 16px 16px;
+      background: #000000;
+    }
+
+    /* ===== DISPLAY ===== */
+    .display {
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding: 0 8px 16px;
+      overflow: hidden;
+    }
+
+    /* Espressione precedente */
+    .display .expression {
+      font-size: 20px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.45);
+      min-height: 28px;
+      line-height: 28px;
+      margin-bottom: 4px;
+      text-align: right;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Numero corrente */
+    .display .current-value {
+      font-size: 72px;
+      font-weight: 200;
+      color: #ffffff;
+      line-height: 1;
+      text-align: right;
+      width: 100%;
+      white-space: nowrap;
+      transition: opacity 0.15s ease;
+    }
+
+    .display .current-value.fade {
+      opacity: 0.4;
+    }
+
+    /* ===== GRIGLIA PULSANTI ===== */
+    .buttons {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    /* ===== STILE PULSANTE BASE ===== */
+    .btn {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 30px;
+      font-weight: 400;
+      border-radius: 50%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:active, .btn.pressing {
+      transform: scale(0.95);
+    }
+
+    /* ===== PULSANTI NUMERICI ===== */
+    .btn.number {
+      background-color: #333333;
+      color: #ffffff;
+    }
+    .btn.number:hover { background-color: #737373; }
+    .btn.number:active, .btn.number.pressing { background-color: #737373; }
+
+    /* ===== PULSANTI FUNZIONE ===== */
+    .btn.function {
+      background-color: #a5a5a5;
+      color: #000000;
+      font-weight: 300;
+    }
+    .btn.function:hover { background-color: #d9d9d9; }
+    .btn.function:active, .btn.function.pressing { background-color: #d9d9d9; }
+
+    /* ===== PULSANTI OPERATORE ===== */
+    .btn.operator {
+      background-color: #ff9f0a;
+      color: #ffffff;
+    }
+    .btn.operator:hover { background-color: #ffcc80; }
+    .btn.operator:active, .btn.operator.pressing { background-color: #ffcc80; }
+
+    /* Operatore selezionato: colori invertiti */
+    .btn.operator.selected {
+      background-color: #ffffff;
+      color: #ff9f0a;
+    }
+    .btn.operator.selected:hover { background-color: #e0e0e0; color: #ff9f0a; }
+    .btn.operator.selected:active, .btn.operator.selected.pressing { background-color: #e0e0e0; color: #ff9f0a; }
+
+    /* ===== PULSANTE 0 (doppia larghezza, ovale) ===== */
+    .btn.zero {
+      grid-column: span 2;
+      border-radius: 999px;
+      aspect-ratio: auto;
+      justify-content: flex-start;
+      padding-left: 28px;
+    }
+
+    /* ===== RESPONSIVITÀ ===== */
+    @media (max-width: 400px) {
+      .calculator {
+        padding: 0 12px 12px;
+      }
+      .buttons {
+        gap: 10px;
+      }
+    }
+
+    @media (max-height: 600px) {
+      .display {
+        flex: 0 0 25%;
+        padding-bottom: 8px;
+      }
+      .display .current-value {
+        font-size: 52px;
+      }
+      .btn {
+        font-size: 24px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      .display {
+        flex: 0 0 20%;
+        padding-bottom: 4px;
+      }
+      .display .current-value {
+        font-size: 40px;
+      }
+      .display .expression {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <!-- Area display -->
+  <div class="display">
+    <div class="expression" id="expression"></div>
+    <div class="current-value" id="currentValue">0</div>
+  </div>
+
+  <!-- Griglia pulsanti -->
+  <div class="buttons">
+    <!-- Riga 1: Funzioni e divisione -->
+    <button class="btn function" data-action="clear">AC</button>
+    <button class="btn function" data-action="negate">+/−</button>
+    <button class="btn function" data-action="percent">%</button>
+    <button class="btn operator" data-action="operator" data-value="÷">÷</button>
+
+    <!-- Riga 2 -->
+    <button class="btn number" data-action="digit" data-value="7">7</button>
+    <button class="btn number" data-action="digit" data-value="8">8</button>
+    <button class="btn number" data-action="digit" data-value="9">9</button>
+    <button class="btn operator" data-action="operator" data-value="×">×</button>
+
+    <!-- Riga 3 -->
+    <button class="btn number" data-action="digit" data-value="4">4</button>
+    <button class="btn number" data-action="digit" data-value="5">5</button>
+    <button class="btn number" data-action="digit" data-value="6">6</button>
+    <button class="btn operator" data-action="operator" data-value="−">−</button>
+
+    <!-- Riga 4 -->
+    <button class="btn number" data-action="digit" data-value="1">1</button>
+    <button class="btn number" data-action="digit" data-value="2">2</button>
+    <button class="btn number" data-action="digit" data-value="3">3</button>
+    <button class="btn operator" data-action="operator" data-value="+">+</button>
+
+    <!-- Riga 5: Zero (doppio), decimale, uguale -->
+    <button class="btn number zero" data-action="digit" data-value="0">0</button>
+    <button class="btn number" data-action="decimal">.</button>
+    <button class="btn operator" data-action="equals">=</button>
+  </div>
+</div>
+
+<script>
+  // =================================================================
+  // STATO — oggetto centralizzato per tutto lo stato della calcolatrice
+  // =================================================================
+  const state = {
+    currentInput: '0',       // Stringa corrente digitata dall'utente
+    previousValue: null,     // Valore numerico del primo operando
+    operator: null,          // Operatore pendente (+, −, ×, ÷)
+    waitingForSecondOperand: false,  // In attesa del secondo numero
+    lastOperator: null,      // Ultimo operatore usato (per ripetizione =)
+    lastOperand: null,       // Ultimo operando usato (per ripetizione =)
+    expression: '',          // Espressione mostrata sopra il display
+    hasError: false,         // Flag di errore (divisione per zero, overflow)
+    justEvaluated: false     // Indica se è stato appena premuto =
+  };
+
+  // Riferimenti DOM
+  const currentValueEl = document.getElementById('currentValue');
+  const expressionEl = document.getElementById('expression');
+  const clearBtn = document.querySelector('[data-action="clear"]');
+
+  // Costanti
+  const MAX_DIGITS = 9;
+
+  // =================================================================
+  // LOGICA — funzioni di calcolo e gestione stato
+  // =================================================================
+
+  /** Esegue un'operazione tra due numeri */
+  function calculate(a, operator, b) {
+    switch (operator) {
+      case '+': return a + b;
+      case '−': return a - b;
+      case '×': return a * b;
+      case '÷':
+        if (b === 0) return null; // Errore: divisione per zero
+        return a / b;
+      default: return b;
+    }
+  }
+
+  /** Converte la stringa di input corrente in un numero */
+  function getCurrentNumber() {
+    return parseFloat(state.currentInput);
+  }
+
+  /** Controlla se il numero è troppo grande per essere visualizzato */
+  function isOverflow(num) {
+    return !isFinite(num) || Math.abs(num) > 999999999;
+  }
+
+  /** Gestisce l'input di una cifra */
+  function inputDigit(digit) {
+    if (state.hasError) { resetAll(); }
+
+    if (state.justEvaluated && !state.waitingForSecondOperand) {
+      // Dopo =, inizia un nuovo calcolo
+      state.currentInput = digit;
+      state.expression = '';
+      state.justEvaluated = false;
+      state.previousValue = null;
+      state.operator = null;
+    } else if (state.waitingForSecondOperand) {
+      state.currentInput = digit;
+      state.waitingForSecondOperand = false;
+      deselectAllOperators();
+    } else {
+      // Limita a MAX_DIGITS cifre (escluso il punto e il segno meno)
+      const digitsOnly = state.currentInput.replace(/[^0-9]/g, '');
+      if (digitsOnly.length >= MAX_DIGITS) return;
+
+      state.currentInput = state.currentInput === '0' ? digit : state.currentInput + digit;
+    }
+
+    updateClearButton();
+    render();
+  }
+
+  /** Gestisce il punto decimale */
+  function inputDecimal() {
+    if (state.hasError) { resetAll(); }
+
+    if (state.justEvaluated) {
+      state.currentInput = '0.';
+      state.expression = '';
+      state.justEvaluated = false;
+      state.previousValue = null;
+      state.operator = null;
+    } else if (state.waitingForSecondOperand) {
+      state.currentInput = '0.';
+      state.waitingForSecondOperand = false;
+      deselectAllOperators();
+    } else if (!state.currentInput.includes('.')) {
+      state.currentInput += '.';
+    }
+
+    updateClearButton();
+    render();
+  }
+
+  /** Gestisce la pressione di un operatore */
+  function inputOperator(op) {
+    if (state.hasError) { resetAll(); }
+
+    const current = getCurrentNumber();
+
+    if (state.justEvaluated) {
+      // Dopo =, usa il risultato come primo operando
+      state.previousValue = current;
+      state.operator = op;
+      state.waitingForSecondOperand = true;
+      state.justEvaluated = false;
+      state.expression = formatForExpression(current) + ' ' + op;
+      state.lastOperator = null;
+      state.lastOperand = null;
+    } else if (state.operator && !state.waitingForSecondOperand) {
+      // Operazione concatenata: calcola il risultato intermedio
+      const result = calculate(state.previousValue, state.operator, current);
+      if (result === null || isOverflow(result)) {
+        showError();
+        return;
+      }
+      state.expression = formatForExpression(result) + ' ' + op;
+      state.currentInput = formatResult(result);
+      state.previousValue = result;
+      state.operator = op;
+      state.waitingForSecondOperand = true;
+    } else if (state.waitingForSecondOperand) {
+      // Cambia operatore senza ricalcolare
+      state.operator = op;
+      state.expression = formatForExpression(state.previousValue) + ' ' + op;
+    } else {
+      // Primo operatore
+      state.previousValue = current;
+      state.operator = op;
+      state.waitingForSecondOperand = true;
+      state.expression = formatForExpression(current) + ' ' + op;
+    }
+
+    highlightOperator(op);
+    render();
+  }
+
+  /** Gestisce il pulsante = */
+  function inputEquals() {
+    if (state.hasError) { resetAll(); render(); return; }
+
+    let result;
+    const current = getCurrentNumber();
+
+    if (state.justEvaluated && state.lastOperator !== null) {
+      // Ripetizione: applica l'ultima operazione allo stesso operando
+      const expressionStr = formatForExpression(current) + ' ' + state.lastOperator + ' ' + formatForExpression(state.lastOperand) + ' =';
+      result = calculate(current, state.lastOperator, state.lastOperand);
+      state.expression = expressionStr;
+    } else if (state.operator) {
+      // Calcolo normale
+      const secondOperand = state.waitingForSecondOperand ? state.previousValue : current;
+      const expressionStr = formatForExpression(state.previousValue) + ' ' + state.operator + ' ' + formatForExpression(secondOperand) + ' =';
+
+      state.lastOperator = state.operator;
+      state.lastOperand = secondOperand;
+
+      result = calculate(state.previousValue, state.operator, secondOperand);
+      state.expression = expressionStr;
+    } else {
+      // Nessun operatore, non fa nulla
+      return;
+    }
+
+    if (result === null || isOverflow(result)) {
+      showError();
+      return;
+    }
+
+    state.currentInput = formatResult(result);
+    state.previousValue = null;
+    state.operator = null;
+    state.waitingForSecondOperand = false;
+    state.justEvaluated = true;
+
+    deselectAllOperators();
+    animateFade();
+    render();
+  }
+
+  /** Pulsante AC/C */
+  function inputClear() {
+    if (state.hasError) { resetAll(); render(); return; }
+
+    if (clearBtn.textContent === 'C') {
+      // Clear: cancella solo l'input corrente
+      state.currentInput = '0';
+      clearBtn.textContent = 'AC';
+    } else {
+      // All Clear: resetta tutto
+      resetAll();
+    }
+    render();
+  }
+
+  /** Resetta completamente lo stato */
+  function resetAll() {
+    state.currentInput = '0';
+    state.previousValue = null;
+    state.operator = null;
+    state.waitingForSecondOperand = false;
+    state.lastOperator = null;
+    state.lastOperand = null;
+    state.expression = '';
+    state.hasError = false;
+    state.justEvaluated = false;
+    clearBtn.textContent = 'AC';
+    deselectAllOperators();
+  }
+
+  /** Pulsante +/− (inversione segno) */
+  function inputNegate() {
+    if (state.hasError) { resetAll(); render(); return; }
+
+    if (state.currentInput === '0' || state.currentInput === '0.') return;
+
+    if (state.currentInput.startsWith('-')) {
+      state.currentInput = state.currentInput.slice(1);
+    } else {
+      state.currentInput = '-' + state.currentInput;
+    }
+    render();
+  }
+
+  /** Pulsante % (percentuale) */
+  function inputPercent() {
+    if (state.hasError) { resetAll(); render(); return; }
+
+    const current = getCurrentNumber();
+
+    if (state.operator && !state.waitingForSecondOperand) {
+      // Es. 200 + 10% → calcola il 10% di 200
+      const percentValue = state.previousValue * (current / 100);
+      state.currentInput = formatResult(percentValue);
+    } else {
+      // Semplice divisione per 100
+      const result = current / 100;
+      if (isOverflow(result)) { showError(); return; }
+      state.currentInput = formatResult(result);
+    }
+
+    state.justEvaluated = false;
+    render();
+  }
+
+  /** Cancella l'ultima cifra (Backspace) */
+  function inputBackspace() {
+    if (state.hasError) { resetAll(); render(); return; }
+    if (state.waitingForSecondOperand || state.justEvaluated) return;
+
+    if (state.currentInput.length === 1 ||
+        (state.currentInput.length === 2 && state.currentInput.startsWith('-'))) {
+      state.currentInput = '0';
+    } else {
+      state.currentInput = state.currentInput.slice(0, -1);
+    }
+
+    updateClearButton();
+    render();
+  }
+
+  /** Mostra errore nel display */
+  function showError() {
+    state.hasError = true;
+    state.currentInput = '0';
+    state.previousValue = null;
+    state.operator = null;
+    state.waitingForSecondOperand = false;
+    state.lastOperator = null;
+    state.lastOperand = null;
+    deselectAllOperators();
+    currentValueEl.textContent = 'Errore';
+    currentValueEl.style.fontSize = '';
+    clearBtn.textContent = 'AC';
+  }
+
+  // =================================================================
+  // RENDERING — aggiornamento dell'interfaccia
+  // =================================================================
+
+  /** Formatta un numero per il display con separatore migliaia */
+  function formatDisplay(inputStr) {
+    // Gestisce il segno negativo
+    const isNegative = inputStr.startsWith('-');
+    let str = isNegative ? inputStr.slice(1) : inputStr;
+
+    let integerPart, decimalPart;
+    const dotIndex = str.indexOf('.');
+    if (dotIndex !== -1) {
+      integerPart = str.slice(0, dotIndex);
+      decimalPart = str.slice(dotIndex); // Include il punto
+    } else {
+      integerPart = str;
+      decimalPart = '';
+    }
+
+    // Aggiunge separatore migliaia (virgola) alla parte intera
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    return (isNegative ? '-' : '') + integerPart + decimalPart;
+  }
+
+  /** Formatta un risultato numerico come stringa */
+  function formatResult(num) {
+    if (Number.isInteger(num)) {
+      return num.toString();
+    }
+
+    // Limita le cifre significative e rimuove zeri finali
+    let str = parseFloat(num.toPrecision(9)).toString();
+
+    // Verifica che non superi MAX_DIGITS cifre
+    const digitsOnly = str.replace(/[^0-9]/g, '');
+    if (digitsOnly.length > MAX_DIGITS) {
+      str = parseFloat(num.toPrecision(MAX_DIGITS)).toString();
+    }
+
+    return str;
+  }
+
+  /** Formatta un numero per l'espressione sopra il display */
+  function formatForExpression(num) {
+    return formatDisplay(formatResult(num));
+  }
+
+  /** Aggiorna il display */
+  function render() {
+    if (state.hasError) return; // Lo stato di errore è gestito altrove
+
+    const displayText = formatDisplay(state.currentInput);
+    currentValueEl.textContent = displayText;
+
+    // Adatta il font-size in base alla lunghezza del testo
+    const len = displayText.replace(/,/g, '').length;
+    if (len > 9) {
+      currentValueEl.style.fontSize = Math.max(32, 72 - (len - 9) * 5) + 'px';
+    } else if (len > 6) {
+      currentValueEl.style.fontSize = Math.max(48, 72 - (len - 6) * 4) + 'px';
+    } else {
+      currentValueEl.style.fontSize = '';
+    }
+
+    // Espressione precedente
+    expressionEl.textContent = state.expression;
+  }
+
+  /** Aggiorna il testo del pulsante AC/C */
+  function updateClearButton() {
+    clearBtn.textContent = (state.currentInput !== '0') ? 'C' : 'AC';
+  }
+
+  /** Evidenzia l'operatore selezionato */
+  function highlightOperator(op) {
+    deselectAllOperators();
+    const operatorBtns = document.querySelectorAll('.btn.operator[data-action="operator"]');
+    operatorBtns.forEach(btn => {
+      if (btn.dataset.value === op) {
+        btn.classList.add('selected');
+      }
+    });
+  }
+
+  /** Rimuove l'evidenziazione da tutti gli operatori */
+  function deselectAllOperators() {
+    document.querySelectorAll('.btn.operator.selected').forEach(btn => {
+      btn.classList.remove('selected');
+    });
+  }
+
+  /** Animazione fade sul display dopo = */
+  function animateFade() {
+    currentValueEl.classList.add('fade');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        currentValueEl.classList.remove('fade');
+      });
+    });
+  }
+
+  // =================================================================
+  // EVENT HANDLING — gestione eventi click e tastiera
+  // =================================================================
+
+  /** Gestisce il click su un pulsante */
+  function handleButtonClick(e) {
+    const btn = e.target.closest('.btn');
+    if (!btn) return;
+
+    const action = btn.dataset.action;
+    const value = btn.dataset.value;
+
+    switch (action) {
+      case 'digit':    inputDigit(value); break;
+      case 'decimal':  inputDecimal(); break;
+      case 'operator': inputOperator(value); break;
+      case 'equals':   inputEquals(); break;
+      case 'clear':    inputClear(); break;
+      case 'negate':   inputNegate(); break;
+      case 'percent':  inputPercent(); break;
+    }
+  }
+
+  // Click sui pulsanti
+  document.querySelector('.buttons').addEventListener('click', handleButtonClick);
+
+  // Mappa tasti → selettore del pulsante corrispondente
+  const keyMap = {
+    '0': '[data-value="0"]',
+    '1': '[data-value="1"]',
+    '2': '[data-value="2"]',
+    '3': '[data-value="3"]',
+    '4': '[data-value="4"]',
+    '5': '[data-value="5"]',
+    '6': '[data-value="6"]',
+    '7': '[data-value="7"]',
+    '8': '[data-value="8"]',
+    '9': '[data-value="9"]',
+    '.': '[data-action="decimal"]',
+    ',': '[data-action="decimal"]',
+    '+': '[data-value="+"]',
+    '-': '[data-value="−"]',
+    '*': '[data-value="×"]',
+    '/': '[data-value="÷"]',
+    'Enter': '[data-action="equals"]',
+    '=': '[data-action="equals"]',
+    'Escape': '[data-action="clear"]',
+    '%': '[data-action="percent"]',
+    'Backspace': null // Gestito separatamente, nessun pulsante corrispondente
+  };
+
+  /** Feedback visivo sulla pressione di un tasto */
+  function flashButton(selector) {
+    if (!selector) return;
+    const btn = document.querySelector(selector);
+    if (!btn) return;
+    btn.classList.add('pressing');
+    setTimeout(() => btn.classList.remove('pressing'), 120);
+  }
+
+  // Gestione tastiera
+  document.addEventListener('keydown', (e) => {
+    const key = e.key;
+
+    if (key in keyMap) {
+      e.preventDefault();
+      flashButton(keyMap[key]);
+
+      switch (key) {
+        case '0': case '1': case '2': case '3': case '4':
+        case '5': case '6': case '7': case '8': case '9':
+          inputDigit(key); break;
+        case '.': case ',':
+          inputDecimal(); break;
+        case '+':  inputOperator('+'); break;
+        case '-':  inputOperator('−'); break;
+        case '*':  inputOperator('×'); break;
+        case '/':  inputOperator('÷'); break;
+        case 'Enter': case '=':
+          inputEquals(); break;
+        case 'Escape':
+          inputClear(); break;
+        case '%':
+          inputPercent(); break;
+        case 'Backspace':
+          inputBackspace(); break;
+      }
+    }
+  });
+
+  // Rendering iniziale
+  render();
+</script>
+
+</body>
+</html>

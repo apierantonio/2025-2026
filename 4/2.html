@@ -1,0 +1,148 @@
+<html>
+    <head>
+        <title>My Page</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+        <script>
+
+            function digit(d){
+                var display = document.getElementById('display');
+
+                if (display.innerHTML !== '0') {
+                    display.innerHTML = display.innerHTML + d.innerHTML;
+                } else {    
+                     display.innerHTML = d.innerHTML;
+                }
+            }
+        </script>
+        <style>
+            .container{
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                left: 200px;
+                top: 200px;
+                width: 234px;
+                height: 410px;
+                background-color: #282D30;
+                border-radius: 25px;
+                overflow: hidden;
+
+                
+                & .header{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    height: 50px;
+
+                    padding: 10px;
+                    width: 100%; 
+                    box-sizing: border-box;
+
+                    
+                    & .control {
+                        width: 15px;
+                        height: 15px;
+                        border-radius: 50%;
+                    }
+
+                    & .control.red {
+                            background-color: red;
+                    }
+                    & .control.yellow{
+                            background-color: yellow;  
+                    }
+                    & .green{
+                        background-color: green;
+                    }
+
+                }
+            }
+            #display{
+                width: 214px;
+                height: 75px;
+                margin-top: 20px;
+                display: flex;
+                justify-content: flex-end;
+                align-items: flex-end;
+                font-size: 32px;
+                color: white;
+                font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            }
+            .keyboard{
+                margin-top: 5px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-gap: 5px;
+                box-sizing: border-box;
+                color: white;
+                font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+                font-size: 24px;
+                width: 214px;
+
+
+                & .key {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 50px;
+                    height: 50px;
+                    background-color: #464B4F;
+                    border-radius: 50%;
+
+                    &:active {
+                        opacity: 0.7;
+                    }
+
+                    &.operation {
+                        background-color: gray;
+
+                        &::before {
+                            content: '';
+                            color: white;
+                            font-size: 18px;
+                        }
+                    }
+                    &.operator {
+                        background-color: orange;
+                        color: white;
+                    }
+                }
+
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="control red" />
+                <div class="control yellow" />
+                <div class="control green" />
+            </div>
+            <div id="display">0</div>  
+             <div class="keyboard">
+                <div class="key operation backspace"><i class="bi bi-backspace"></i></div>
+                <div class="key operation ac">AC</i></div>
+                <div class="key operation percentage">%</i></div>
+                <div class="key operator">÷</i></div>
+
+                <div class="key" onclick="digit(this)">7</div>
+                <div class="key" onclick="digit(this)">8</div>
+                <div class="key" onclick="digit(this)">9</div>
+                <div class="key operator">x</i></div>
+                <div class="key" onclick="digit(this)">4</div>
+                <div class="key" onclick="digit(this)">5</div>
+                <div class="key" onclick="digit(this)">6</div>
+                <div class="key operator">-</i></div>
+                <div class="key" onclick="digit(this)">1</div>
+                <div class="key" onclick="digit(this)">2</div>
+                <div class="key" onclick="digit(this)">3</div>
+                <div class="key operator">+</i></div>
+                <div class="key"><i class="bi bi-plus-slash-minus"></i></div>
+                <div class="key" onclick="digit(this)">0</div>
+                <div class="key" onclick="digit(this)">.</div>
+                <div class="key operator">=</i></div>
+            </div>  
+        </div>
+    </body>
+</html>

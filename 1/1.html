@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Registration</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50:  '#eef4ff',
+                            100: '#dbe6fe',
+                            200: '#bfd3fe',
+                            300: '#93b4fd',
+                            400: '#6090fa',
+                            500: '#3b6cf5',
+                            600: '#254bea',
+                            700: '#1d39d7',
+                            800: '#1e30ae',
+                            900: '#1e2e89',
+                            950: '#172054',
+                        },
+                        surface: {
+                            50:  '#f8f9fb',
+                            100: '#f1f3f6',
+                            200: '#e5e8ee',
+                            300: '#d2d7e0',
+                            400: '#9ba3b3',
+                            500: '#6b7489',
+                            600: '#4a5264',
+                            700: '#363d4e',
+                            800: '#252a37',
+                            900: '#181c26',
+                        }
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%':   { opacity: '0', transform: 'translateY(16px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideHeader: {
+                            '0%':   { opacity: '0', transform: 'translateY(-8px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    },
+                    animation: {
+                        'fade-up':      'fadeUp 0.5s ease-out forwards',
+                        'fade-up-d1':   'fadeUp 0.5s 0.08s ease-out forwards',
+                        'fade-up-d2':   'fadeUp 0.5s 0.16s ease-out forwards',
+                        'fade-up-d3':   'fadeUp 0.5s 0.24s ease-out forwards',
+                        'fade-up-d4':   'fadeUp 0.5s 0.32s ease-out forwards',
+                        'slide-header': 'slideHeader 0.4s ease-out forwards',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Staggered entrance: sections start invisible --- */
+        .anim-section { opacity: 0; }
+
+        /* --- Custom focus ring that complements Tailwind --- */
+        .field-input {
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+        .field-input:focus {
+            border-color: #3b6cf5;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59,108,245,0.12);
+        }
+
+        /* --- Subtle pattern on body --- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- Radio card active state --- */
+        .radio-card:has(input:checked) {
+            border-color: #3b6cf5;
+            background: #eef4ff;
+            color: #1d39d7;
+            box-shadow: 0 0 0 2px rgba(59,108,245,0.15);
+        }
+        .radio-card:has(input:checked) .radio-dot {
+            border-color: #3b6cf5;
+            background: #3b6cf5;
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        /* --- Button hover lift --- */
+        .btn-submit {
+            transition: background-color 0.2s, box-shadow 0.25s, transform 0.2s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59,108,245,0.3);
+        }
+        .btn-cancel {
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        /* --- Smooth scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d2d7e0; border-radius: 8px; }
+
+        input:invalid {
+            border-color: #f87171;
+            background-color: #fff1f1;
+        }
+    </style>
+</head>
+
+<body class="bg-surface-50 min-h-screen font-sans text-surface-700 antialiased relative">
+
+<div class="relative z-10 max-w-[740px] mx-auto px-5 py-10 sm:py-14">
+
+    <!-- ===== CARD ===== -->
+    <div class="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_32px_rgba(0,0,0,0.06)] overflow-hidden">
+
+        <!-- ── HEADER ── -->
+        <div class="bg-gradient-to-br from-surface-800 via-surface-900 to-brand-950 px-8 sm:px-10 py-8 relative overflow-hidden animate-slide-header">
+            <!-- Decorative circles -->
+            <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-600/10 blur-2xl"></div>
+            <div class="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-brand-400/8 blur-xl"></div>
+
+            <div class="relative flex items-center justify-between">
+                <div>
+                    <h1 class="text-[22px] sm:text-2xl font-semibold text-white tracking-[-0.3px] flex items-center gap-3">
+                        <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+                            <i data-lucide="clipboard-check" class="w-[18px] h-[18px] text-brand-300"></i>
+                        </span>
+                        Product Registration
+                    </h1>
+                    <p class="text-[13px] text-white/50 mt-2 ml-12">Register your product to activate warranty &amp; support</p>
+                </div>
+                <span class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-medium text-brand-300/80 border border-brand-400/20 bg-brand-400/8 rounded-full px-3.5 py-1.5">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                    Secure Form
+                </span>
+            </div>
+        </div>
+
+        <!-- ── BODY ── -->
+        <div class="px-8 sm:px-10 py-9">
+            <form id="registrationForm" novalidate>
+
+                <!-- ══ SECTION 1: Personal Information ══ -->
+                <section class="anim-section animate-fade-up mb-8">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-brand-50 text-brand-600">
+                            <i data-lucide="user" class="w-[15px] h-[15px]"></i>
+                        </div>
+                        <h2 class="text-[11px] font-semibold uppercase tracking-[1.2px] text-surface-400">Personal Information</h2>
+                        <div class="flex-1 h-px bg-surface-100 ml-2"></div>
+                    </div>
+
+                    <!-- First / Last name -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-[13px] font-medium text-surface-600 mb-1.5">First Name</label>
+                            <div class="relative">
+                                <i data-lucide="user-round" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                                <input type="text" name="firstname" placeholder="John"
+                                    class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Last Name</label>
+                            <div class="relative">
+                                <i data-lucide="user-round" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                                <input type="text" name="lastname" placeholder="Doe"
+                                    class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300"
+                                    pattern="pippo|pluto"
+                                    >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address 1 -->
+                    <div class="mb-4">
+                        <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Address Line 1</label>
+                        <div class="relative">
+                            <i data-lucide="map-pin" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                            <input type="text" name="address1" placeholder="123 Main Street"
+                                class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300">
+                        </div>
+                    </div>
+
+                    <!-- Address 2 -->
+                    <div class="mb-4">
+                        <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Address Line 2</label>
+                        <div class="relative">
+                            <i data-lucide="map-pin" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none opacity-50"></i>
+                            <input type="text" name="address2" placeholder="Apt, Suite, Unit (optional)"
+                                class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300">
+                        </div>
+                    </div>
+
+                    <!-- City / State / Zip -->
+                    <div class="grid grid-cols-[2fr_1fr_1fr] gap-4 mb-4">
+                        <div>
+                            <label class="block text-[13px] font-medium text-surface-600 mb-1.5">City</label>
+                            <div class="relative">
+                                <i data-lucide="building-2" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                                <input type="text" name="city" placeholder="New York"
+                                    class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[13px] font-medium text-surface-600 mb-1.5">State</label>
+                            <input type="text" name="state" placeholder="NY"
+                                class="field-input w-full px-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300">
+                        </div>
+                        <div>
+                            <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Zip Code</label>
+                            <input type="text" name="zipcode" placeholder="10001"
+                                class="field-input w-full px-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300">
+                        </div>
+                    </div>
+
+                    <!-- Country -->
+                    <div>
+                        <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Country</label>
+                        <div class="relative">
+                            <i data-lucide="globe" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                            <select name="country"
+                                class="field-input w-full pl-10 pr-10 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none appearance-none cursor-pointer">
+                                <option value="">Select country…</option>
+                                <option value="US">United States</option>
+                                <option value="IT">Italy</option>
+                                <option value="DE">Germany</option>
+                                <option value="FR">France</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ══ SECTION 2: Purchase Details ══ -->
+                <section class="anim-section animate-fade-up-d1 mb-8">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-brand-50 text-brand-600">
+                            <i data-lucide="shopping-bag" class="w-[15px] h-[15px]"></i>
+                        </div>
+                        <h2 class="text-[11px] font-semibold uppercase tracking-[1.2px] text-surface-400">Purchase Details</h2>
+                        <div class="flex-1 h-px bg-surface-100 ml-2"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Item Purchased</label>
+                            <div class="relative">
+                                <i data-lucide="package" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                                <select name="item"
+                                    class="field-input w-full pl-10 pr-10 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none appearance-none cursor-pointer">
+                                    <option value="">Select an item…</option>
+                                    <option value="item1">Item 1</option>
+                                    <option value="item2">Item 2</option>
+                                    <option value="item3">Item 3</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Purchase Date</label>
+                            <div class="relative">
+                                <i data-lucide="calendar" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                                <input type="date" name="purchasedate"
+                                    class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Serial Number</label>
+                        <div class="relative">
+                            <i data-lucide="hash" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                            <input type="text" name="serialnumber" placeholder="e.g. SN-XXXX-XXXX"
+                                class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none placeholder:text-surface-300">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ══ SECTION 3: Usage & Environment ══ -->
+                <section class="anim-section animate-fade-up-d2 mb-8">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-brand-50 text-brand-600">
+                            <i data-lucide="settings-2" class="w-[15px] h-[15px]"></i>
+                        </div>
+                        <h2 class="text-[11px] font-semibold uppercase tracking-[1.2px] text-surface-400">Usage &amp; Environment</h2>
+                        <div class="flex-1 h-px bg-surface-100 ml-2"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- Used For -->
+                        <div>
+                            <p class="text-[13px] font-medium text-surface-600 mb-3">Used for</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="usedFor" value="1" class="sr-only">
+                                    <i data-lucide="home" class="w-3.5 h-3.5 opacity-60"></i> Home
+                                </label>
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="usedFor" value="2" class="sr-only">
+                                    <i data-lucide="briefcase" class="w-3.5 h-3.5 opacity-60"></i> Business
+                                </label>
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="usedFor" value="3" class="sr-only">
+                                    <i data-lucide="church" class="w-3.5 h-3.5 opacity-60"></i> Religion
+                                </label>
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="usedFor" value="4" class="sr-only">
+                                    <i data-lucide="more-horizontal" class="w-3.5 h-3.5 opacity-60"></i> Other
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Network OS -->
+                        <div>
+                            <p class="text-[13px] font-medium text-surface-600 mb-3">Network Operating System</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="networkOS" value="1" class="sr-only">
+                                    <i data-lucide="monitor" class="w-3.5 h-3.5 opacity-60"></i> Windows
+                                </label>
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="networkOS" value="2" class="sr-only">
+                                    <i data-lucide="terminal" class="w-3.5 h-3.5 opacity-60"></i> Linux
+                                </label>
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="networkOS" value="3" class="sr-only">
+                                    <i data-lucide="laptop" class="w-3.5 h-3.5 opacity-60"></i> Mac
+                                </label>
+                                <label class="radio-card flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 cursor-pointer text-sm text-surface-500 hover:border-brand-300 hover:bg-brand-50/50 transition-all">
+                                    <span class="radio-dot w-4 h-4 rounded-full border-2 border-surface-300 flex-shrink-0 transition-all"></span>
+                                    <input type="radio" name="networkOS" value="4" class="sr-only">
+                                    <i data-lucide="more-horizontal" class="w-3.5 h-3.5 opacity-60"></i> Other
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ══ SECTION 4: Comments ══ -->
+                <section class="anim-section animate-fade-up-d3 mb-8">
+                    <div class="flex items-center gap-2.5 mb-5">
+                        <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-brand-50 text-brand-600">
+                            <i data-lucide="message-square" class="w-[15px] h-[15px]"></i>
+                        </div>
+                        <h2 class="text-[11px] font-semibold uppercase tracking-[1.2px] text-surface-400">Additional Comments</h2>
+                        <div class="flex-1 h-px bg-surface-100 ml-2"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[13px] font-medium text-surface-600 mb-1.5">Comments</label>
+                        <div class="relative">
+                            <i data-lucide="pen-line" class="absolute left-3.5 top-3 w-4 h-4 text-surface-300 pointer-events-none"></i>
+                            <textarea name="comments" rows="4" placeholder="Any additional information or feedback…"
+                                class="field-input w-full pl-10 pr-4 py-[10px] text-sm rounded-[10px] border-[1.5px] border-surface-200 bg-surface-50 outline-none resize-y placeholder:text-surface-300"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ══ ACTIONS ══ -->
+                <div class="anim-section animate-fade-up-d4 flex items-center justify-between pt-5 border-t border-surface-100">
+                    <p class="text-[12px] text-surface-400 flex items-center gap-1.5">
+                        <i data-lucide="lock" class="w-3 h-3"></i>
+                        Your data is encrypted &amp; secure
+                    </p>
+                    <div class="flex gap-3">
+                        <button type="reset"
+                            class="btn-cancel px-6 py-2.5 rounded-[10px] text-sm font-semibold text-surface-400 border-[1.5px] border-surface-200 bg-transparent hover:bg-surface-50 hover:border-surface-300 hover:text-surface-600 cursor-pointer">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="btn-submit px-7 py-2.5 rounded-[10px] text-sm font-semibold text-white bg-brand-500 hover:bg-brand-600 border-none cursor-pointer flex items-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            Submit Registration
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Initialize Lucide icons -->
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
