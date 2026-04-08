@@ -13,9 +13,45 @@
                      display.innerHTML = d.innerHTML;
                 }
             }
+
+            var 
+                x1 = 0, y1 = 0, x2 = 0, y2 = 0, xi = 0, yi = 0;
+
+            function handleStart(e) {
+
+                x1 = e.clientX;
+                y1 = e.clientY;
+
+                xi = e.target.offsetLeft;
+                yi = e.target.offsetTop;
+                console.log(x1, y1, xi, yi);
+
+                e.target.style.opacity = '0.5';
+            }
+
+            function handleEnd(e) {
+                e.target.style.opacity = '1';
+
+            }
+
+            function handleOver(e) {
+
+                x2 = e.clientX;
+                y2 = e.clientY;
+
+                // Move the element
+                e.target.style.left = (xi + (x2 - x1)) + 'px';
+                e.target.style.top = (yi + (y2 - y1)) + 'px';
+
+                console.log(x2, y2);
+
+            }
+
+
         </script>
         <style>
             .container{
+                position: absolute;
                 display: flex;
                 flex-direction: column;
                 position: absolute;
@@ -90,6 +126,7 @@
                     height: 50px;
                     background-color: #464B4F;
                     border-radius: 50%;
+                    cursor: pointer;
 
                     &:active {
                         opacity: 0.7;
@@ -114,7 +151,12 @@
         </style>
     </head>
     <body>
-        <div class="container" draggable="true">
+        <div class="container" draggable="true" 
+            ondmousedown="handleStart(event)" 
+            ondmouseup="handleEnd(event)" 
+            onmousemove="handleOver(event)"
+
+        >
             <div class="header">
                 <div class="control red" />
                 <div class="control yellow" />
