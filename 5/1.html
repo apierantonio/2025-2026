@@ -1,0 +1,26 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <script>
+            var o = new Object();
+            var a = new Object();
+            a.name = "Luca1";
+             
+
+            var f = function() {
+                console.log(this.name);
+            }
+
+            a.stampa = f;
+
+            o.name = 'Luca2';
+            o.print = f;
+            o.print();
+
+            a.stampa();
+
+        </script>
+    </body>
+</html>
