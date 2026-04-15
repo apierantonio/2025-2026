@@ -17,6 +17,11 @@
         ->addElement(new TextElement("Name", "name"))
         ->addElement(new PasswordElement("Password", "password"))
         ->addElement(new TextAreaElement("Note", "note"))
+        ->addElement(
+            (new Radio("Gender", "gender"))
+            ->addOption("Maschio")
+            ->addOption("Femmina")
+            )
         ->render();
 
 

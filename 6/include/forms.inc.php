@@ -63,6 +63,33 @@
         }
     }
 
+    Class Radio extends Element {
+        private $options;
+
+        public function __construct($label, $name, $value = "") {
+            parent::__construct($label, $name, $value);
+        }
+
+        public function addOption($option) {
+            $this->options[] = $option;
+            return $this;
+        }
+
+        public function render() {
+            echo "<div class=\"mb-3\">\n";
+            echo "<p>$this->label</p>\n";
+            foreach ($this->options as $option) {
+                $checked = ($option == $this->value) ? "checked" : "";
+
+                echo "<div class=\"form-check\">\n";
+                echo "<input class=\"form-check-input\" type=\"radio\" name=\"$this->name\" id=\"{$this->name}_".md5($option)."\" value=\"$option\" $checked>\n";
+                echo "<label class=\"form-check-label\" for=\"{$this->name}_".md5($option)."\">$option</label>\n";
+                echo "</div>\n";
+            }
+            echo "</div>\n";
+        }
+    }
+
     Class Form extends namedElement {
 
         private $method;
