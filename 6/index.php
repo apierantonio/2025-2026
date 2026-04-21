@@ -22,7 +22,8 @@
             ->addOption("Maschio")
             ->addOption("Femmina")
             )
-        ->render();
+        ->addElement((new SelectCountry("Country", "country"))
+    )->render();
 
 
 ?>
