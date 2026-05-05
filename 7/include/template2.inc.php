@@ -46,9 +46,22 @@ Class Template {
 
 
 	function __construct($filename = "") {
-		
+
+		global $config;
+
+		if (isset($config['auth'])) {
+			$skin = 'admin';
+		} else {
+			if (isset($config['skin'])) {
+				$skin = $config['skin'];
+			}
+		}
+
+		//$filename = "skins/{$skin}/html/{$filename}.html";
+		$filename = "{$filename}.html";
 		if (file_exists($filename)) {
 			$this->template_file = $filename;
+
 		} else {
 			if (isset($GLOBALS['config']['languages']) && (count($GLOBALS['config']['languages'])>0)) {
 				
@@ -925,6 +938,12 @@ Class Template {
 
 	function get() {
 		
+		if (isset($_SESSION)) {
+			foreach($_SESSION['user'] as $k => $v) {
+				$this->setContent("user.".$k,$v);
+			}
+		}
+
 		if (!$this->parsed) {
 			$this->parse();
 		}
@@ -938,7 +957,13 @@ Class Template {
 	}
 
 	function close() {
-		
+
+		if (isset($_SESSION)) {
+			foreach($_SESSION['user'] as $k => $v) {
+				$this->setContent("user.".$k,$v);
+			}
+		}
+
 		$this->setContent("style", $this->getExtension());
 		
 		if (!$this->parsed) {

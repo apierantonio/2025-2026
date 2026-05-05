@@ -1,0 +1,169 @@
+﻿<!-- Content
+================================================== -->
+<div id="content">
+
+
+<!-- 960 Container -->
+<div class="container floated">
+
+	<div class="sixteen floated page-title">
+
+		<h2>News</h2>
+
+		<nav id="breadcrumbs">
+			<ul>
+				<li>You are here:</li>
+				<li><a href="index.php">Home</a></li>
+				<li>News</li>
+				<li><[title]></li>
+			</ul>
+		</nav>
+
+	</div>
+
+</div>
+<!-- 960 Container / End -->
+
+
+<!-- 960 Container -->
+<div class="container floated">
+
+	<!-- Page Content -->
+	<div class="eleven floated">
+
+		<!-- Post -->
+		<article class="post">
+
+			<figure class="post-img picture">
+				<a href="images/blog-01-large.jpg" rel="fancybox" title="First Light on the Lake"><img src="images/blog-01.jpg" alt="" /></a>
+			</figure>
+
+			<[publication_date::format library="nevia"]>
+
+			<section class="post-content">
+
+				<header class="meta">
+					<h2><a href="blog-post.html"><[title]></a></h2>
+					<span><i class="halflings user"></i>By <a href="#">admin</a></span>
+					<span><i class="halflings tag"></i><a href="#">Boating</a>, <a href="#">Recreation</a></span>
+					<span><i class="halflings comments"></i>With <a href="#">12 Comments</a></span>
+				</header>
+
+				<p><[body]></p>
+
+			</section>
+
+		</article>
+
+		<!-- About Author -->
+		<section class="about-author">
+			<img src="images/about.jpg" alt="" />
+			<div class="about-description">
+				<h4>John Doe</h4>
+				<p>Fusce vel magna ligula, et lobortis dolor. Pellentesque est tortor, tincidunt euismod aliquam eget, porttitor non lacus. Sed vel massa leo. Morbi non mauris ullamcorper scelerisque nulla tristique mi a massa convallis cursus.</p>
+			</div>
+		</section>
+
+
+		<!-- Divider -->
+		<div class="line"></div>
+
+
+		<!-- Comments -->
+		<section class="comments-sec">
+		<h3>Comments <span class="comments-amount">(4)</span></h3>
+
+			<ol class="commentlist">
+				<li>
+					<div class="comment">
+						<div class="avatar"><img src="http://www.gravatar.com/avatar/98287fc0f05ebed1c2aae6bc2d236d3a?s=60&d=identicon" alt="" /> </div>
+						<div class="comment-des"><div class="arrow-comment"></div>
+							<div class="comment-by"><strong>John Doe</strong><span class="reply"><span style="color:#ccc">/ </span><a href="#">Reply</a></span> <span class="date">August 10, 2012</span></div>
+							<p>Maecenas dignissim euismod nunc, in commodo est luctus eget. Proin in nunc laoreet justo volutpat blandit enim. Sem felis, ullamcorper vel aliquam non, varius eget justo.</p>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+
+					<ol class="childlist">
+						<li>
+						<div class="comment">
+							<div class="avatar"><img src="http://www.gravatar.com/avatar/3fbdc6a307d10a1725a54b2b391b5cfd?s=60&d=identicon" alt="" /> </div>
+							<div class="comment-des"><div class="arrow-comment"></div>
+								<div class="comment-by"><strong>Admin</strong><span class="reply"><span style="color:#ccc">/ </span><a href="#">Reply</a></span> <span class="date">August 12, 2012</span></div>
+								<p>Dignissim euismod nunc, in commodo est luctus eget. Proin in nunc laoreet justo volutpat blandit enim. Sem felis, ullamcorper vel aliquam.</p>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						</li>
+					</ol>
+				</li>
+
+				<li>
+					<div class="comment">
+						<div class="avatar"><img src="http://www.gravatar.com/avatar/02e6e397130044d01d993fdc47bf8cff?s=60&d=identicon" alt="" /> </div>
+						<div class="comment-des"><div class="arrow-comment"></div>
+							<div class="comment-by"><strong>Kathy Brown</strong><span class="reply"><span style="color:#ccc">/ </span><a href="#">Reply</a></span><span class="date">August 12, 2012</span></div>
+							<p>Morbi velit eros, sagittis in facilisis non, rhoncus et erat. Nam posuere tristique sem, eu ultricies tortor imperdiet vitae. Curabitur lacinia neque non metus</p>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</li>
+
+				<li>
+					<div class="comment">
+						<div class="avatar"><img src="http://www.gravatar.com/avatar/88930f2341cc3ce9c2688b2b3b5d69e3?s=60&d=identicon" alt="" /> </div>
+						<div class="comment-des"><div class="arrow-comment"></div>
+							<div class="comment-by"><strong>John Doe</strong><span class="reply"><span style="color:#ccc">/ </span><a href="#">Reply</a></span><span class="date">August 12, 2012</span></div>
+							<p>Commodo est luctus eget. Proin in nunc laoreet justo volutpat blandit enim. Sem felis, ullamcorper vel aliquam non, varius eget justo. Duis quis nunc tellus sollicitudin mauris.</p>
+						</div>
+						<div class="clearfix"></div>
+					 </div>
+				</li>
+			 </ol>
+
+		</section>
+		<div class="clearfix"></div>
+
+		<!-- Divider -->
+		<div class="line"></div>
+		<section class="comments-sec">
+			<h3>Add Comment</h3>
+			<br />
+			<!-- Form -->
+
+			<section id="contact">
+
+				<!-- Message -->
+				<mark id="message"></mark>
+
+				<!-- Contact Form -->
+				<form id="contactform">
+
+					<fieldset>
+
+						<div>
+							<label>Nick:</label>
+							<input type="text"/>
+						</div>
+
+						<div>
+							<label>Comment: <span>*</span></label>
+							<textarea cols="40" rows="3"></textarea>
+						</div>
+
+					</fieldset>
+
+					<input type="submit" class="submit"  value="Add Comment" />
+					<div class="clearfix"></div>
+
+				</form>
+
+			</section>
+
+		</section>
+
+
+	</div>
+	<!-- Content / End -->
+
+	<[sidemenu]>

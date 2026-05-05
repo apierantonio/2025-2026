@@ -6,10 +6,10 @@
     require_once 'include/dbms.inc.php';
     require_once 'include/template2.inc.php';
 
-    $main = new Template('skins/nevia/dtml/main.html');
-    $body = new Template('skins/nevia/dtml/home.html');
+    $main = new Template('skins/nevia/dtml/main');
+    $body = new Template('skins/nevia/dtml/home');
 
-    $main->setContent('body', $body->get());
+    $main->setContent("body", $body->get());
     $main->close();
 
 ?>

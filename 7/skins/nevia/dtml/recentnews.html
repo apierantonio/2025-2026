@@ -9,12 +9,9 @@
         <[foreach]>
 		<div class="four columns alpha">
 			<article class="recent-blog">
-				<section class="date">
-					<span class="day">28</span>
-					<span class="month">Dec</span>
-				</section>
-				<h4><a href="blog-post.html"><[title]></a></h4>
-				<p><[body::]></span></p>
+				<[publication_date::format library="nevia"]>
+				<h4><a href="news.php?id=<[id]>"><[title]></a></h4>
+				<p><[body]> ...</p>
 			</article>
 		</div>
         <[/foreach]>
