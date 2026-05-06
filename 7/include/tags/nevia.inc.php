@@ -33,7 +33,7 @@
         public function getslider($name, $data, $pars) {
 
 
-            $slider = new Template('skins/nevia/dtml/slider.html');
+            $slider = new Template('skins/nevia/dtml/slider');
             return $slider->get();    
         }   
 
@@ -50,6 +50,18 @@
             return $date->get();
 
             
+        }
+
+        public function toast($name, $data, $pars) {
+
+            echo "QUI: ", $data;
+            if ($data == '') return '';
+
+            $toasttpl = new Template('skins/admin/dtml/toast');
+            $toasttpl->setContent('message', $data ? 'Success!' : 'Error!');
+            $toasttpl->setContent('type', $data ? 'success' : 'danger');
+
+            return $toasttpl->get();    
         }
 
     }

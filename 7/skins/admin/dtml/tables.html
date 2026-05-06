@@ -1,0 +1,32 @@
+<div class="container-xxl flex-grow-1 container-p-y">
+              <!-- Basic Bootstrap Table -->
+              <div class="card">
+                <h5 class="card-header test"><span><[pagetitle]></span><button type="button" onClick="document.location = 'news-add.php'" class="btn btn-secondary">Add News</button></h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>id</th>
+                        <th>Title</th>
+                        <th>Publication Date</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      <[foreach]>
+                      <tr>
+                        <td>
+                          <[id]>
+                        </td>
+                        <td><[title]></td>
+                        <td><[publication_date]></td>
+                      </tr>
+                      <[/foreach]>
+                          
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!--/ Basic Bootstrap Table -->
+
+              
+            <!-- / Content -->
