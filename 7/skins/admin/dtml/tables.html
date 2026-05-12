@@ -1,7 +1,7 @@
 <div class="container-xxl flex-grow-1 container-p-y">
               <!-- Basic Bootstrap Table -->
               <div class="card">
-                <h5 class="card-header test"><span><[pagetitle]></span><button type="button" onClick="document.location = 'news-add.php'" class="btn btn-secondary">Add News</button></h5>
+                <h5 class="card-header "><span><[pagetitle]></span><button type="button" onClick="document.location = 'news-add.php'" class="btn btn-secondary">Add News</button></h5>
                 <div class="table-responsive text-nowrap">
                   <table class="table">
                     <thead>
@@ -13,7 +13,7 @@
                     </thead>
                     <tbody class="table-border-bottom-0">
                       <[foreach]>
-                      <tr>
+                      <tr  class="highlight" onClick="document.location = 'news-edit.php?id=<[id]>&status=1'">
                         <td>
                           <[id]>
                         </td>
