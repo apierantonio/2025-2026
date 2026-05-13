@@ -6,10 +6,8 @@
     require_once 'include/dbms.inc.php';
     require_once 'include/template2.inc.php';
 
-    require_once 'include/auth.inc.php';
-
-    $main = new Template('skins/admin/dtml/main');
-    $body = new Template('skins/admin/dtml/home');
+    $main = new Template('skins/nevia/dtml/main');
+    $body = new Template('skins/nevia/dtml/login');
 
     $main->setContent("body", $body->get());
     $main->close();
